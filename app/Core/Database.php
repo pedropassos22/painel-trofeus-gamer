@@ -2,36 +2,44 @@
 
 class Database
 {
-    private PDO $pdo;
+    private PDO $connection;
 
-    public function __construct(array $config)
+    public function __construct(array $env)
     {
         $dsn = sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
-            $config['DB_HOST'],
-            $config['DB_PORT'],
-            $config['DB_NAME']
+            $env['DB_HOST'],
+            $env['DB_PORT'],
+            $env['DB_NAME']
         );
 
-        $this->pdo = new PDO(
-            $dsn,
-            $config['DB_USER'],
-            $config['DB_PASS']
-        );
+        try {
 
-        $this->pdo->setAttribute(
-            PDO::ATTR_ERRMODE,
-            PDO::ERRMODE_EXCEPTION
-        );
+            $this->connection = new PDO(
+                $dsn,
+                $env['DB_USER'],
+                $env['DB_PASS']
+            );
 
-        $this->pdo->setAttribute(
-            PDO::ATTR_DEFAULT_FETCH_MODE,
-            PDO::FETCH_ASSOC
-        );
+            $this->connection->setAttribute(
+                PDO::ATTR_ERRMODE,
+                PDO::ERRMODE_EXCEPTION
+            );
+
+            $this->connection->setAttribute(
+                PDO::ATTR_DEFAULT_FETCH_MODE,
+                PDO::FETCH_ASSOC
+            );
+
+        } catch (PDOException $e) {
+
+            die('Erro ao conectar com o banco: ' . $e->getMessage());
+
+        }
     }
 
-    public function connection(): PDO
+    public function getConnection(): PDO
     {
-        return $this->pdo;
+        return $this->connection;
     }
 }

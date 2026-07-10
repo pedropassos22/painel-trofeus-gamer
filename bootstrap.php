@@ -1,12 +1,13 @@
 <?php
 
-/**
- * Bootstrap da aplicação
- * Carrega as configurações do arquivo .env
- */
-
 $env = parse_ini_file(__DIR__ . '/.env');
 
 if ($env === false) {
-    die('Erro: não foi possível carregar o arquivo .env');
+    die('Arquivo .env não encontrado.');
 }
+
+require_once __DIR__ . '/app/Core/Database.php';
+
+$database = new Database($env);
+
+$pdo = $database->getConnection();
