@@ -8,6 +8,8 @@
 03 - Banco recriável por arquivos versionados.
 04 - Um arquivo, uma responsabilidade.
 05 - Toda decisão arquitetural deve ser documentada.
+06 - O site deve ser responsivo desde o início, priorizando: Desktop → Mobile → Tablet.
+07 - Nunca utilizar caminhos ou URLs fixos (hardcoded). Todo caminho deve utilizar constantes
 
 ## Temporárias
 
