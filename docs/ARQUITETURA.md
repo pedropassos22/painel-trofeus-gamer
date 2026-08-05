@@ -1,3 +1,22 @@
+Este arquivo responde:
+
+Como o sistema foi construído?
+
+Conteúdo:
+
+Estrutura de pastas
+Fluxo da aplicação
+Bootstrap
+Database
+PDO
+Uploads
+Organização dos módulos
+Padrões de código
+
+----        ----        ----        ----        ----        ----
+----        ----        ----        ----        ----        ----
+----        ----        ----        ----        ----        ----
+
 # Arquitetura do Projeto
 
 ## Nome
