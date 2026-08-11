@@ -16,5 +16,3 @@ $router->get('/games', [GamesController::class, 'index']);
 $router->get('/games/create', [GamesController::class, 'create']);
 
 $router->post('/games/create', [CreateGameAction::class, 'execute']);
-
-$router->post('/games/create', [CreateGameAction::class, 'execute']);

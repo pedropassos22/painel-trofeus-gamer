@@ -6,10 +6,22 @@
 
     </div>
 
+    <?php if (!empty($error)): ?>
+
+        <div class="alert alert-error">
+            <?= htmlspecialchars($error) ?>
+        </div>
+
+    <?php endif; ?>
 
     <div class="card">
 
         <form method="POST" action="<?= BASE_URL ?>/games/create">
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="<?= \App\Core\Csrf::token() ?>"
+            >
 
             <div class="form-group">
 
@@ -17,15 +29,15 @@
                     Nome do jogo
                 </label>
 
-                <input 
+                <input
                     type="text"
                     id="nome"
                     name="nome"
+                    value="<?= htmlspecialchars($oldInput['nome'] ?? '') ?>"
                     required
                 >
 
             </div>
-
 
             <div class="form-group">
 
@@ -38,11 +50,11 @@
                     id="horas"
                     name="horas"
                     min="0"
+                    value="<?= htmlspecialchars($oldInput['horas'] ?? '') ?>"
                     required
                 >
 
             </div>
-
 
             <div class="form-group">
 
@@ -56,11 +68,11 @@
                     name="avaliacao"
                     min="0"
                     max="5"
+                    value="<?= htmlspecialchars($oldInput['avaliacao'] ?? '') ?>"
                     required
                 >
 
             </div>
-
 
             <div class="form-group">
 
@@ -71,15 +83,12 @@
                 <textarea
                     id="comentario"
                     name="comentario"
-                ></textarea>
+                ><?= htmlspecialchars($oldInput['comentario'] ?? '') ?></textarea>
 
             </div>
 
-
             <button class="btn-primary">
-
                 Salvar jogo
-
             </button>
 
         </form>
