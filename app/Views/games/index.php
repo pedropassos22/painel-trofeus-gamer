@@ -81,9 +81,28 @@
 
                         <td>
 
-                            <a href="#">
+                            <a href="<?= BASE_URL ?>/games/<?= $game['id'] ?>/edit">
                                 Editar
                             </a>
+
+                            <form
+                                method="POST"
+                                action="<?= BASE_URL ?>/games/<?= $game['id'] ?>/delete"
+                                style="display: inline;"
+                                onsubmit="return confirm('Tem certeza que deseja excluir este jogo?');"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="<?= \App\Core\Csrf::token() ?>"
+                                >
+
+                                <button type="submit">
+                                    Excluir
+                                </button>
+
+                            </form>
 
                         </td>
 

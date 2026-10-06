@@ -29,41 +29,65 @@ class Router
     }
 
 
-    public function dispatch(string $method, string $uri): void
-    {
-        $uri = $this->normalize($uri);
+public function dispatch(string $method, string $uri): void
+{
+    $uri = $this->normalize($uri);
 
-        $action = $this->routes[$method][$uri] ?? null;
+    $action = $this->routes[$method][$uri] ?? null;
+    $params = [];
 
+    if (!$action) {
+        foreach ($this->routes[$method] ?? [] as $route => $routeAction) {
 
-        if (!$action) {
+            $pattern = preg_replace(
+                '#\{([a-zA-Z_][a-zA-Z0-9_]*)\}#',
+                '([^/]+)',
+                $route
+            );
 
-            http_response_code(404);
+            $pattern = '#^' . $pattern . '$#';
 
-            echo '404 - Página não encontrada';
+            if (preg_match($pattern, $uri, $matches)) {
 
-            return;
+                array_shift($matches);
 
+                preg_match_all(
+                    '#\{([a-zA-Z_][a-zA-Z0-9_]*)\}#',
+                    $route,
+                    $names
+                );
+
+                foreach ($names[1] as $index => $name) {
+                    $params[$name] = $matches[$index];
+                }
+
+                $action = $routeAction;
+
+                break;
+            }
         }
-
-
-        if (is_callable($action)) {
-
-            call_user_func($action);
-
-            return;
-
-        }
-
-
-        [$class, $method] = $action;
-
-
-        $controller = new $class();
-
-        $controller->$method();
-
     }
+
+    if (!$action) {
+        http_response_code(404);
+
+        echo '404 - Página não encontrada';
+
+        return;
+    }
+
+    if (is_callable($action)) {
+        call_user_func($action, ...array_values($params));
+
+        return;
+    }
+
+    [$class, $method] = $action;
+
+    $controller = new $class();
+
+    $controller->$method(...array_values($params));
+}
 
 
     private function normalize(string $uri): string

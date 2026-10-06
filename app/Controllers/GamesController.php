@@ -42,5 +42,27 @@ public function index(): void
     ]);
 }
 
+    public function edit(int $id): void
+{
+    $service = new GameService(
+        App::get('pdo')
+    );
+
+    $game = $service->getGame($id);
+
+    if (!$game) {
+        http_response_code(404);
+
+        echo 'Jogo não encontrado.';
+
+        return;
+    }
+
+    View::render('games/edit', [
+        'title' => 'Editar Jogo',
+        'game' => $game
+    ]);
+}
+
 }
 
