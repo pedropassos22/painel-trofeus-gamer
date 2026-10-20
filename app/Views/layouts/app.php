@@ -20,7 +20,9 @@
 
     <div class="app">
 
-        <?php require APP_PATH . '/Views/partials/sidebar.php'; ?>
+        <?php if (\App\Core\Auth::check()): ?>
+            <?php require APP_PATH . '/Views/partials/sidebar.php'; ?>
+        <?php endif; ?>
 
         <main class="content">
 

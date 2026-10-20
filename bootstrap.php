@@ -33,7 +33,7 @@ if ($env === false) {
 */
 
 define('APP_NAME', $env['APP_NAME']);
-define('BASE_URL', 'http://painel-trofeus-gamer.test');
+define('BASE_URL', rtrim($env['APP_URL'], '/'));
 
 define('ROOT_PATH', __DIR__);
 

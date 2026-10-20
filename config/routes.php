@@ -1,9 +1,13 @@
 <?php
 
-use App\Actions\UpdateGameAction;
-use App\Controllers\GamesController;
 use App\Actions\CreateGameAction;
 use App\Actions\DeleteGameAction;
+use App\Actions\LoginAction;
+use App\Actions\LogoutAction;
+use App\Actions\RegisterAction;
+use App\Actions\UpdateGameAction;
+use App\Controllers\AuthController;
+use App\Controllers\GamesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +15,16 @@ use App\Actions\DeleteGameAction;
 |--------------------------------------------------------------------------
 */
 
+// Login e cadastro
+$router->get('/login', [AuthController::class, 'showLogin']);
+$router->post('/login', [LoginAction::class, 'execute']);
+
+$router->get('/register', [AuthController::class, 'showRegister']);
+$router->post('/register', [RegisterAction::class, 'execute']);
+
+$router->post('/logout', [LogoutAction::class, 'execute']);
+
+// Jogos
 $router->get('/', [GamesController::class, 'index']);
 
 $router->get('/games', [GamesController::class, 'index']);
