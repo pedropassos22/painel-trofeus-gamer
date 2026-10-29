@@ -19,17 +19,23 @@ class Auth
         return $_SESSION['user_nome'] ?? null;
     }
 
-    public static function login(int $id, string $nome): void
+    public static function isAdmin(): bool
+    {
+        return self::check() && ($_SESSION['user_role'] ?? 'user') === 'admin';
+    }
+
+    public static function login(int $id, string $nome, string $role = 'user'): void
     {
         session_regenerate_id(true);
 
         $_SESSION['user_id'] = $id;
         $_SESSION['user_nome'] = $nome;
+        $_SESSION['user_role'] = $role;
     }
 
     public static function logout(): void
     {
-        unset($_SESSION['user_id'], $_SESSION['user_nome']);
+        unset($_SESSION['user_id'], $_SESSION['user_nome'], $_SESSION['user_role']);
 
         session_regenerate_id(true);
     }

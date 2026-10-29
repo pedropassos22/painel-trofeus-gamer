@@ -28,4 +28,13 @@ if (!Auth::check() && !in_array($currentRoute, $publicRoutes, true)) {
     exit;
 }
 
+// Páginas /admin: só administradores
+$isAdminArea = $currentRoute === '/admin' || str_starts_with($currentRoute, '/admin/');
+
+if ($isAdminArea && !Auth::isAdmin()) {
+    http_response_code(403);
+
+    exit('Acesso negado.');
+}
+
 $router->dispatch($_SERVER['REQUEST_METHOD'], $uri);

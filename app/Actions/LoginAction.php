@@ -26,7 +26,7 @@ class LoginAction
 
             $user = $service->attempt($email, $senha);
 
-            Auth::login((int) $user['id'], (string) $user['nome']);
+            Auth::login((int) $user['id'], (string) $user['nome'], (string) $user['role']);
 
             header('Location: ' . BASE_URL . '/games');
 

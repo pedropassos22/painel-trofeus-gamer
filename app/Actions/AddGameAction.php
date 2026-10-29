@@ -2,39 +2,35 @@
 
 namespace App\Actions;
 
-
 use App\Core\App;
+use App\Core\Auth;
 use App\Core\Csrf;
 use App\Services\GameService;
 use InvalidArgumentException;
 
-class CreateGameAction
+class AddGameAction
 {
-    public function execute(): void
+    public function execute(int $id): void
     {
+        if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
+            http_response_code(403);
 
-    if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
-        http_response_code(403);
-
-        exit('Token CSRF inválido.');
-    }
-
+            exit('Token CSRF inválido.');
+        }
 
         $data = [
-            'nome' => $_POST['nome'] ?? '',
+            'status' => $_POST['status'] ?? '',
             'horas' => $_POST['horas'] ?? null,
             'avaliacao' => $_POST['avaliacao'] ?? null,
             'comentario' => $_POST['comentario'] ?? null
         ];
 
         try {
-            $service = new GameService(
-                App::get('pdo')
-            );
+            $service = new GameService(App::get('pdo'));
 
-            $service->create($data);
+            $service->add((int) Auth::id(), $id, $data);
 
-            $_SESSION['flash_success'] = 'Jogo cadastrado com sucesso.';
+            $_SESSION['flash_success'] = 'Jogo adicionado à sua lista.';
 
             header('Location: ' . BASE_URL . '/games');
 
@@ -43,7 +39,7 @@ class CreateGameAction
             $_SESSION['flash_error'] = $e->getMessage();
             $_SESSION['old_input'] = $data;
 
-            header('Location: ' . BASE_URL . '/games/create');
+            header('Location: ' . BASE_URL . '/games/' . $id . '/add');
 
             exit;
         }

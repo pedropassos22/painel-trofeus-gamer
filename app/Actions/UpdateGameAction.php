@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Core\App;
+use App\Core\Auth;
 use App\Core\Csrf;
 use App\Services\GameService;
 use InvalidArgumentException;
@@ -18,18 +19,16 @@ class UpdateGameAction
         }
 
         $data = [
-            'nome' => $_POST['nome'] ?? '',
+            'status' => $_POST['status'] ?? '',
             'horas' => $_POST['horas'] ?? null,
             'avaliacao' => $_POST['avaliacao'] ?? null,
             'comentario' => $_POST['comentario'] ?? null
         ];
 
         try {
-            $service = new GameService(
-                App::get('pdo')
-            );
+            $service = new GameService(App::get('pdo'));
 
-            $service->update($id, $data);
+            $service->update((int) Auth::id(), $id, $data);
 
             $_SESSION['flash_success'] = 'Jogo atualizado com sucesso.';
 
@@ -40,13 +39,7 @@ class UpdateGameAction
             $_SESSION['flash_error'] = $e->getMessage();
             $_SESSION['old_input'] = $data;
 
-            header(
-                'Location: ' .
-                BASE_URL .
-                '/games/' .
-                $id .
-                '/edit'
-            );
+            header('Location: ' . BASE_URL . '/games/' . $id . '/edit');
 
             exit;
         }

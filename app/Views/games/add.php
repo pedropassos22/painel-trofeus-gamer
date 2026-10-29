@@ -2,7 +2,7 @@
 
     <div class="page-header">
 
-        <h1>Novo Jogo</h1>
+        <h1>Adicionar: <?= htmlspecialchars($game['nome']) ?></h1>
 
     </div>
 
@@ -16,7 +16,8 @@
 
     <div class="card">
 
-        <form method="POST" action="<?= BASE_URL ?>/games/create">
+        <form method="POST" action="<?= BASE_URL ?>/games/<?= (int) $game['id'] ?>/add">
+
             <input
                 type="hidden"
                 name="csrf_token"
@@ -25,17 +26,24 @@
 
             <div class="form-group">
 
-                <label for="nome">
-                    Nome do jogo
+                <label for="status">
+                    Status
                 </label>
 
-                <input
-                    type="text"
-                    id="nome"
-                    name="nome"
-                    value="<?= htmlspecialchars($oldInput['nome'] ?? '') ?>"
-                    required
-                >
+                <select id="status" name="status" required>
+
+                    <?php foreach (\App\Services\GameService::STATUS as $value => $label): ?>
+
+                        <option
+                            value="<?= $value ?>"
+                            <?= ($oldInput['status'] ?? 'zerado') === $value ? 'selected' : '' ?>
+                        >
+                            <?= $label ?>
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
 
             </div>
 
@@ -50,7 +58,7 @@
                     id="horas"
                     name="horas"
                     min="0"
-                    value="<?= htmlspecialchars($oldInput['horas'] ?? '') ?>"
+                    value="<?= htmlspecialchars((string) ($oldInput['horas'] ?? '')) ?>"
                     required
                 >
 
@@ -68,7 +76,7 @@
                     name="avaliacao"
                     min="0"
                     max="5"
-                    value="<?= htmlspecialchars($oldInput['avaliacao'] ?? '') ?>"
+                    value="<?= htmlspecialchars((string) ($oldInput['avaliacao'] ?? '')) ?>"
                     required
                 >
 
@@ -83,13 +91,17 @@
                 <textarea
                     id="comentario"
                     name="comentario"
-                ><?= htmlspecialchars($oldInput['comentario'] ?? '') ?></textarea>
+                ><?= htmlspecialchars((string) ($oldInput['comentario'] ?? '')) ?></textarea>
 
             </div>
 
-            <button class="btn-primary">
-                Salvar jogo
+            <button class="btn-primary" type="submit">
+                Adicionar à minha lista
             </button>
+
+            <a href="<?= BASE_URL ?>/games/search">
+                Cancelar
+            </a>
 
         </form>
 

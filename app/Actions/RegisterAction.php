@@ -30,7 +30,7 @@ class RegisterAction
 
             $user = $service->register($data);
 
-            Auth::login((int) $user['id'], (string) $user['nome']);
+            Auth::login((int) $user['id'], (string) $user['nome'], 'user');
 
             $_SESSION['flash_success'] = 'Conta criada com sucesso. Bem-vindo!';
 

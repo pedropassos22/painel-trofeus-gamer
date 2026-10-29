@@ -3,8 +3,10 @@
 namespace App\Actions;
 
 use App\Core\App;
+use App\Core\Auth;
 use App\Core\Csrf;
 use App\Services\GameService;
+use InvalidArgumentException;
 
 class DeleteGameAction
 {
@@ -16,13 +18,15 @@ class DeleteGameAction
             exit('Token CSRF inválido.');
         }
 
-        $service = new GameService(
-            App::get('pdo')
-        );
+        try {
+            $service = new GameService(App::get('pdo'));
 
-        $service->delete($id);
+            $service->delete((int) Auth::id(), $id);
 
-        $_SESSION['flash_success'] = 'Jogo excluído com sucesso.';
+            $_SESSION['flash_success'] = 'Jogo removido da sua lista.';
+        } catch (InvalidArgumentException $e) {
+            $_SESSION['flash_error'] = $e->getMessage();
+        }
 
         header('Location: ' . BASE_URL . '/games');
 

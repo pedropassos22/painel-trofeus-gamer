@@ -2,10 +2,10 @@
 
     <div class="page-header">
 
-        <h1>Jogos</h1>
+        <h1>Meus jogos</h1>
 
-        <a href="/games/create" class="btn-primary">
-            + Novo jogo
+        <a href="<?= BASE_URL ?>/games/search" class="btn-primary">
+            + Adicionar jogo
         </a>
 
     </div>
@@ -18,6 +18,14 @@
 
     <?php endif; ?>
 
+    <?php if (!empty($error)): ?>
+
+        <div class="alert alert-error">
+            <?= htmlspecialchars($error) ?>
+        </div>
+
+    <?php endif; ?>
+
     <div class="card">
 
         <table>
@@ -25,71 +33,62 @@
             <thead>
 
                 <tr>
-
-                    <th>ID</th>
                     <th>Nome</th>
+                    <th>Status</th>
                     <th>Horas</th>
                     <th>Avaliação</th>
                     <th>Ações</th>
-
                 </tr>
 
             </thead>
-
 
             <tbody>
 
             <?php if (empty($games)): ?>
 
                 <tr>
-
                     <td colspan="5" class="empty">
-
-                        Nenhum jogo cadastrado.
-
+                        Nenhum jogo na sua lista ainda.
                     </td>
-
                 </tr>
 
-
             <?php else: ?>
-
 
                 <?php foreach ($games as $game): ?>
 
                     <tr>
 
                         <td>
-                            <?= $game['id'] ?>
-                        </td>
-
-
-                        <td>
                             <?= htmlspecialchars($game['nome']) ?>
                         </td>
 
-
                         <td>
-                            <?= $game['horas'] ?>h
+                            <span class="badge badge-<?= htmlspecialchars($game['status']) ?>">
+                                <?= htmlspecialchars(
+                                    \App\Services\GameService::STATUS[$game['status']] ?? $game['status']
+                                ) ?>
+                            </span>
                         </td>
 
-
                         <td>
-                            <?= $game['avaliacao'] ?>/5
+                            <?= (int) $game['horas'] ?>h
                         </td>
 
+                        <td>
+                            <?= (int) $game['avaliacao'] ?>/5
+                        </td>
 
                         <td>
 
-                            <a href="<?= BASE_URL ?>/games/<?= $game['id'] ?>/edit">
+                            <a href="<?= BASE_URL ?>/games/<?= (int) $game['id'] ?>/edit">
                                 Editar
                             </a>
 
                             <form
                                 method="POST"
-                                action="<?= BASE_URL ?>/games/<?= $game['id'] ?>/delete"
+                                action="<?= BASE_URL ?>/games/<?= (int) $game['id'] ?>/delete"
                                 style="display: inline;"
-                                onsubmit="return confirm('Tem certeza que deseja excluir este jogo?');"
+                                onsubmit="return confirm('Tem certeza que deseja remover este jogo da sua lista?');"
                             >
 
                                 <input
@@ -108,15 +107,11 @@
 
                     </tr>
 
-
                 <?php endforeach; ?>
-
 
             <?php endif; ?>
 
-
             </tbody>
-
 
         </table>
 

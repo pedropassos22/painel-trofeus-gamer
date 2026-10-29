@@ -18,6 +18,14 @@
             ⚙ Configurações
         </a>
 
+        <?php if (\App\Core\Auth::isAdmin()): ?>
+
+            <a href="<?= BASE_URL ?>/admin">
+                🛠 Administração
+            </a>
+
+        <?php endif; ?>
+
     </nav>
 
 </aside>

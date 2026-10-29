@@ -6,14 +6,23 @@
 
     </div>
 
+    <?php if (!empty($error)): ?>
+
+        <div class="alert alert-error">
+            <?= htmlspecialchars($error) ?>
+        </div>
+
+    <?php endif; ?>
+
     <div class="card">
 
-        <form method="POST" action="<?= BASE_URL ?>/games/<?= $game['id'] ?>/edit">
+        <form method="POST" action="<?= BASE_URL ?>/games/<?= (int) $game['id'] ?>/edit">
+
             <input
-            type="hidden"
-            name="csrf_token"
-            value="<?= \App\Core\Csrf::token() ?>"
-         >
+                type="hidden"
+                name="csrf_token"
+                value="<?= \App\Core\Csrf::token() ?>"
+            >
 
             <div class="form-group">
 
@@ -24,10 +33,32 @@
                 <input
                     type="text"
                     id="nome"
-                    name="nome"
                     value="<?= htmlspecialchars($game['nome']) ?>"
-                    required
+                    disabled
                 >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="status">
+                    Status
+                </label>
+
+                <select id="status" name="status" required>
+
+                    <?php foreach (\App\Services\GameService::STATUS as $value => $label): ?>
+
+                        <option
+                            value="<?= $value ?>"
+                            <?= $game['status'] === $value ? 'selected' : '' ?>
+                        >
+                            <?= $label ?>
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
 
             </div>
 
@@ -42,7 +73,7 @@
                     id="horas"
                     name="horas"
                     min="0"
-                    value="<?= htmlspecialchars($game['horas']) ?>"
+                    value="<?= htmlspecialchars((string) $game['horas']) ?>"
                     required
                 >
 
@@ -60,7 +91,7 @@
                     name="avaliacao"
                     min="0"
                     max="5"
-                    value="<?= htmlspecialchars($game['avaliacao']) ?>"
+                    value="<?= htmlspecialchars((string) $game['avaliacao']) ?>"
                     required
                 >
 
@@ -75,11 +106,11 @@
                 <textarea
                     id="comentario"
                     name="comentario"
-                ><?= htmlspecialchars($game['comentario'] ?? '') ?></textarea>
+                ><?= htmlspecialchars((string) ($game['comentario'] ?? '')) ?></textarea>
 
             </div>
 
-            <button class="btn-primary">
+            <button class="btn-primary" type="submit">
                 Salvar alterações
             </button>
 
