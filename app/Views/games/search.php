@@ -34,7 +34,7 @@ $suggestionLabels = [
 
         <form method="GET" action="<?= BASE_URL ?>/games/search">
 
-            <div class="form-group">
+            <div class="form-group suggest-wrap">
 
                 <label for="q">
                     Pesquise o jogo pelo nome
@@ -46,6 +46,7 @@ $suggestionLabels = [
                     name="q"
                     value="<?= htmlspecialchars($term) ?>"
                     autocomplete="off"
+                    data-suggest-url="<?= BASE_URL ?>/games/suggest"
                     required
                 >
 
@@ -181,3 +182,5 @@ $suggestionLabels = [
     <?php endif; ?>
 
 </section>
+
+<script src="<?= BASE_URL ?>/assets/js/game-search.js?v=1"></script>

@@ -38,6 +38,7 @@ $router->get('/games', [GamesController::class, 'index']);
 
 // Pesquisar no catálogo e adicionar à minha lista
 $router->get('/games/search', [GamesController::class, 'search']);
+$router->get('/games/suggest', [GamesController::class, 'suggest']);
 
 // Atenção: nestas duas rotas o {id} é o id do jogo no CATÁLOGO
 $router->get('/games/{id}/add', [GamesController::class, 'addForm']);

@@ -7,6 +7,7 @@ use App\Core\Auth;
 use App\Core\View;
 use App\Services\GameService;
 use App\Services\SuggestionService;
+use App\Services\IgdbService;
 
 class GamesController
 {
@@ -74,6 +75,56 @@ class GamesController
             'success' => $success,
             'error' => $error
         ]);
+    }
+
+        public function suggest(): void
+    {
+        // Libera a sessão para não travar as próximas buscas enquanto esta espera a IGDB
+        session_write_close();
+
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-store');
+
+        $term = is_string($_GET['q'] ?? null) ? trim($_GET['q']) : '';
+
+        if (mb_strlen($term) < 3) {
+            echo json_encode(['ok' => true, 'tooMany' => false, 'items' => []]);
+
+            return;
+        }
+
+        try {
+            $found = (new IgdbService())->search($term);
+        } catch (\Throwable $e) {
+            http_response_code(502);
+
+            echo json_encode(['ok' => false, 'tooMany' => false, 'items' => []]);
+
+            return;
+        }
+
+        // Regra combinada: só mostra sugestões se houver 10 títulos ou menos
+        if (count($found) > 10) {
+            echo json_encode(['ok' => true, 'tooMany' => true, 'items' => []]);
+
+            return;
+        }
+
+        $items = [];
+
+        foreach ($found as $game) {
+            $items[] = [
+                'external_id' => $game['external_id'],
+                'nome' => $game['nome'],
+                'ano_lancamento' => $game['ano_lancamento'],
+                'lancamento_status' => $game['lancamento_status']
+            ];
+        }
+
+        echo json_encode(
+            ['ok' => true, 'tooMany' => false, 'items' => $items],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     public function addForm(int $id): void
